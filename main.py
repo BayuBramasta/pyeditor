@@ -1,9 +1,9 @@
 import tkinter as tk
-from tkinter import ttk
 from tkinter import *
 from tkinter import filedialog
-from tkinter.messagebox import *
 from tkinter import font
+from tkinter import ttk
+from tkinter.messagebox import *
 
 
 #Pop up & something
@@ -36,13 +36,21 @@ def font_popup():
     x = (screen_width // 2) - (250 // 2)
     y = (screen_height // 2) - (100 // 2)
     popup.geometry(f"250x100+{x}+{y}")
-    label = tk.Label(popup, text="Fonts").grid(row=0, column=0,padx=5, pady=5)
-    # Adding combobox drop down list
+
+    # Font type
+    tk.Label(popup, text="Fonts").grid(row=0, column=0,padx=5, pady=5)
     fonts = sorted(font.families())
     fontchoosen = ttk.Combobox(popup, width=27, values=fonts)
     fontchoosen.grid(column=1, row=0)
-    btnChange = (tk.Button(popup, text="Change", command=lambda :textEditor.configure(font=fontchoosen.get()))
-                 .grid(row=1, column=0, padx=5, pady=5))
+
+    # Font size
+    tk.Label(popup, text="Size").grid(row=1, column=0, padx=5, pady=5)
+    fontsize = tk.Text(popup, height=1, width=23 )
+    fontsize.grid(column=1, row=1)
+
+    # Button
+    (tk.Button(popup, text="Change", command=lambda :textEditor.configure(font = tk.font.Font(family=fontchoosen.get(), size=fontsize.get('1.0',tk.END), weight="normal")))
+                 .grid(row=2, column=0, columnspan=2, pady=5))
 
 #save and open
 def closeWindow():
@@ -103,7 +111,7 @@ def load():
                     filename = filedialog.askopenfilename(initialdir="/",
                                                           title="Select a File",
                                                           filetypes=(("Text files",
-                                                                      "*.txt*"),
+                                                                      "*.*"),
                                                                      ("all files",
                                                                       "*.*")))
                     fileOpen = open(filename)
@@ -193,7 +201,8 @@ root.config(menu = menubar)
 
 #body session
 body = tk.Frame(root)
-textEditor = tk.Text(body,font=('Tahoma', 12 ,'normal'))
+textEditor = tk.Text(body)
+textEditor.configure(font = tk.font.Font(family="Arial", size=14, weight="normal"))
 textEditor.pack(fill="both",expand=True)
 body.pack(fill="both",expand=True)
 
