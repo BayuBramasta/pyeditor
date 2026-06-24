@@ -1,3 +1,5 @@
+import os
+import sys
 import tkinter as tk
 import tkinter.scrolledtext as st
 from tkinter import *
@@ -62,9 +64,9 @@ def font_popup(event=None):
         # Button
         (tk.Button(popup, text="Change", command=lambda :[textEditor.configure(
             font = tk.font.Font(family=fontchoosen.get(), size=int(fontsize.get('1.0',tk.END)), weight="normal")),popup.destroy()])
-                     .grid(row=2, column=0, columnspan=2, pady=5))
+         .grid(row=2, column=0, columnspan=2, pady=5))
     else:
-        if event.keysym == "equal":
+        if event.keysym == "equal" or event.delta > -120:
             f = font.Font(font=textEditor.cget("font"))
             fontsize = int(f.actual("size"))+1
             textEditor.configure(font=tk.font.Font(family=f.actual("family"), size=int(fontsize)))
@@ -72,6 +74,8 @@ def font_popup(event=None):
             f = font.Font(font=textEditor.cget("font"))
             fontsize = int(f.actual("size")) - 1
             textEditor.configure(font=tk.font.Font(family=f.actual("family"), size=int(fontsize)))
+
+
 # Status bar
 def update_status(event=None):
     current_font = font.Font(font=textEditor.cget("font"))
@@ -111,8 +115,8 @@ def closeWindow():
 def save(event=None):
     if root.title().split()[2] == 'New':
         filename = filedialog.asksaveasfile(initialfile='Untitled.txt',
-                              defaultextension=".txt", filetypes=[("All Files", "*.*"),
-                            ("Text Documents", "*.txt")])
+                                            defaultextension=".txt", filetypes=[("All Files", "*.*"),
+                                                                                ("Text Documents", "*.txt")])
         if filename:
             save_popup()
             with open(filename.name, "a") as f:
@@ -132,77 +136,98 @@ def load(event=None):
         if title != 'New':
             f = open(title)
             if textEditor.get('0.0', tk.END) == f.read():
-                textEditor.delete('0.0', tk.END)
                 filename = filedialog.askopenfilename(initialdir="/",
                                                       title="Select a File",
                                                       filetypes=(("Text files",
                                                                   "*.txt*"),
                                                                  ("all files",
                                                                   "*.*")))
-                fileOpen = open(filename)
-                root.title("Text Editor " + fileOpen.name)
-                textEditor.insert(tk.END, fileOpen.read())
+                if filename:
+                    textEditor.delete('0.0', tk.END)
+                    fileOpen = open(filename)
+                    root.title("Text Editor " + fileOpen.name)
+                    textEditor.insert(tk.END, fileOpen.read())
+                else:
+                    pass
             else:
                 alert = askyesno('Warning', "Are you sure?")
                 if alert:
-                    textEditor.delete('0.0', tk.END)
                     filename = filedialog.askopenfilename(initialdir="/",
                                                           title="Select a File",
                                                           filetypes=(("Text files",
                                                                       "*.*"),
                                                                      ("all files",
                                                                       "*.*")))
-                    fileOpen = open(filename)
-                    root.title("Text Editor " + fileOpen.name)
-                    textEditor.insert(tk.END, fileOpen.read())
+                    if filename:
+                        textEditor.delete('0.0', tk.END)
+                        fileOpen = open(filename)
+                        root.title("Text Editor " + fileOpen.name)
+                        textEditor.insert(tk.END, fileOpen.read())
+                    else:
+                        pass
                 else:
                     save()
-                    textEditor.delete('0.0', tk.END)
                     filename = filedialog.askopenfilename(initialdir="/",
                                                           title="Select a File",
                                                           filetypes=(("Text files",
                                                                       "*.txt*"),
                                                                      ("all files",
                                                                       "*.*")))
-                    fileOpen = open(filename)
-                    root.title("Text Editor " + fileOpen.name)
-                    textEditor.insert(tk.END, fileOpen.read())
+                    if filename:
+                        textEditor.delete('0.0', tk.END)
+                        fileOpen = open(filename)
+                        root.title("Text Editor " + fileOpen.name)
+                        textEditor.insert(tk.END, fileOpen.read())
+                    else:
+                        pass
         else:
             alert = askyesno('Warning', "Are you sure?")
             if alert:
-                textEditor.delete('0.0', tk.END)
                 filename = filedialog.askopenfilename(initialdir="/",
                                                       title="Select a File",
                                                       filetypes=(("Text files",
                                                                   "*.txt*"),
                                                                  ("all files",
                                                                   "*.*")))
-                fileOpen = open(filename)
-                root.title("Text Editor " + fileOpen.name)
-                textEditor.insert(tk.END, fileOpen.read())
+                if filename:
+                    textEditor.delete('0.0', tk.END)
+                    fileOpen = open(filename)
+                    root.title("Text Editor " + fileOpen.name)
+                    textEditor.insert(tk.END, fileOpen.read())
+                else:
+                    pass
             else:
                 save()
-                textEditor.delete('0.0', tk.END)
                 filename = filedialog.askopenfilename(initialdir="/",
                                                       title="Select a File",
                                                       filetypes=(("Text files",
                                                                   "*.txt*"),
                                                                  ("all files",
                                                                   "*.*")))
-                fileOpen = open(filename)
-                root.title("Text Editor " + fileOpen.name)
-                textEditor.insert(tk.END, fileOpen.read())
+                if filename:
+                    textEditor.delete('0.0', tk.END)
+                    fileOpen = open(filename)
+                    root.title("Text Editor " + fileOpen.name)
+                    textEditor.insert(tk.END, fileOpen.read())
+                else:
+                    pass
     else:
-        textEditor.delete('0.0', tk.END)
         filename = filedialog.askopenfilename(initialdir="/",
                                               title="Select a File",
                                               filetypes=(("Text files",
                                                           "*.txt*"),
                                                          ("all files",
                                                           "*.*")))
-        fileOpen = open(filename)
-        root.title("Text Editor " + fileOpen.name)
-        textEditor.insert(tk.END, fileOpen.read())
+        if filename:
+            textEditor.delete('0.0', tk.END)
+            fileOpen = open(filename)
+            root.title("Text Editor " + fileOpen.name)
+            textEditor.insert(tk.END, fileOpen.read())
+        else:
+            pass
+
+def newWindow():
+    os.system('pyeditor.bat')
 
 
 #initialize window
@@ -228,6 +253,7 @@ menubar = Menu(root)
 # File here
 file = Menu(menubar, tearoff = 0)
 menubar.add_cascade(label ='File', menu = file)
+file.add_command(label ='New', command = newWindow)
 file.add_command(label ='Open...', command = load)
 file.add_command(label ='Save', command = save)
 # Edit here
@@ -260,10 +286,26 @@ root.bind("<Control-s>",save)
 # zoom in & out text editor shortcut
 root.bind("<Control-=>",font_popup)
 root.bind("<Control-_>",font_popup)
+root.bind("<Control-MouseWheel>",font_popup)
 # open file
 root.bind("<Control-o>",load)
 
 root.protocol("WM_DELETE_WINDOW",closeWindow)
 # status bar function
 poll_cursor()
+
+#getting dir without GUI
+def loadSys(Nfile):
+    fileOpen = open(str(Nfile))
+    root.title("Text Editor " + fileOpen.name)
+    textEditor.insert(tk.END, fileOpen.read())
+
+if len(sys.argv) > 1:
+    cwd = str(os.getcwd()).split("\\")
+    dir = ""
+    for i in range(0, len(cwd)):
+        dir+=cwd[i]+"/"
+    file = f"{dir}/{sys.argv[1]}"
+    loadSys(file)
+
 root.mainloop()
