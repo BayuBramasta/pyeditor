@@ -93,8 +93,12 @@ def poll_cursor():
 #save and open
 def closeWindow():
     if len(textEditor.get('0.0', tk.END)) > 1:
-        title = root.title().split()[2]
-        if title != 'New':
+        title = ""
+        dir = root.title().split(" | ")[1]
+        for i in range(0, len(dir.split('/'))-1):
+            title += dir.split('/')[i]+"\\"
+        title += dir.split('/')[-1]
+        if dir != 'New Files':
             f = open(title)
             if textEditor.get('0.0', tk.END) == f.read():
                 root.destroy()
@@ -113,7 +117,7 @@ def closeWindow():
     else:
         root.destroy()
 def save(event=None):
-    if root.title().split()[2] == 'New':
+    if root.title().split(" | ")[1] == 'New Files':
         filename = filedialog.asksaveasfile(initialfile='Untitled.txt',
                                             defaultextension=".txt", filetypes=[("All Files", "*.*"),
                                                                                 ("Text Documents", "*.txt")])
@@ -127,13 +131,22 @@ def save(event=None):
             pass
     else:
         save_popup()
-        with open(root.title().split()[2], "w") as f:
+        title = ""
+        dir = root.title().split(" | ")[1]
+        for i in range(0, len(dir.split('/')) - 1):
+            title += dir.split('/')[i] + "\\"
+        title += dir.split('/')[-1]
+        with open(title, "w") as f:
             f.write(textEditor.get('0.0', tk.END))
-        root.title("Text Editor "+str(root.title().split()[2]))
+        root.title("Text Editor | "+str(dir))
 def load(event=None):
     if len(textEditor.get('0.0', tk.END)) > 1:
-        title = root.title().split()[2]
-        if title != 'New':
+        title = ""
+        dir = root.title().split(" | ")[1]
+        for i in range(0, len(dir.split('/')) - 1):
+            title += dir.split('/')[i] + "\\"
+        title += dir.split('/')[-1]
+        if dir != 'New Files':
             f = open(title)
             if textEditor.get('0.0', tk.END) == f.read():
                 filename = filedialog.askopenfilename(initialdir="/",
@@ -145,7 +158,7 @@ def load(event=None):
                 if filename:
                     textEditor.delete('0.0', tk.END)
                     fileOpen = open(filename)
-                    root.title("Text Editor " + fileOpen.name)
+                    root.title("Text Editor | " + fileOpen.name)
                     textEditor.insert(tk.END, fileOpen.read())
                 else:
                     pass
@@ -161,7 +174,7 @@ def load(event=None):
                     if filename:
                         textEditor.delete('0.0', tk.END)
                         fileOpen = open(filename)
-                        root.title("Text Editor " + fileOpen.name)
+                        root.title("Text Editor | " + fileOpen.name)
                         textEditor.insert(tk.END, fileOpen.read())
                     else:
                         pass
@@ -176,7 +189,7 @@ def load(event=None):
                     if filename:
                         textEditor.delete('0.0', tk.END)
                         fileOpen = open(filename)
-                        root.title("Text Editor " + fileOpen.name)
+                        root.title("Text Editor | " + fileOpen.name)
                         textEditor.insert(tk.END, fileOpen.read())
                     else:
                         pass
@@ -192,7 +205,7 @@ def load(event=None):
                 if filename:
                     textEditor.delete('0.0', tk.END)
                     fileOpen = open(filename)
-                    root.title("Text Editor " + fileOpen.name)
+                    root.title("Text Editor | " + fileOpen.name)
                     textEditor.insert(tk.END, fileOpen.read())
                 else:
                     pass
@@ -207,7 +220,7 @@ def load(event=None):
                 if filename:
                     textEditor.delete('0.0', tk.END)
                     fileOpen = open(filename)
-                    root.title("Text Editor " + fileOpen.name)
+                    root.title("Text Editor | " + fileOpen.name)
                     textEditor.insert(tk.END, fileOpen.read())
                 else:
                     pass
@@ -221,7 +234,7 @@ def load(event=None):
         if filename:
             textEditor.delete('0.0', tk.END)
             fileOpen = open(filename)
-            root.title("Text Editor " + fileOpen.name)
+            root.title("Text Editor | " + fileOpen.name)
             textEditor.insert(tk.END, fileOpen.read())
         else:
             pass
@@ -232,7 +245,7 @@ def newWindow():
 
 #initialize window
 root = tk.Tk()
-root.title("Text Editor New Files")
+root.title("Text Editor | New Files")
 # make window appear on center of screen
 
 # Get screen size
@@ -297,15 +310,15 @@ poll_cursor()
 #getting dir without GUI
 def loadSys(Nfile):
     fileOpen = open(str(Nfile))
-    root.title("Text Editor " + fileOpen.name)
+    root.title("Text Editor | " + fileOpen.name)
     textEditor.insert(tk.END, fileOpen.read())
 
 if len(sys.argv) > 1:
     cwd = str(os.getcwd()).split("\\")
     dir = ""
     for i in range(0, len(cwd)):
-        dir+=cwd[i]+"/"
-    file = f"{dir}/{sys.argv[1]}"
+        dir += cwd[i] + "/"
+    file = f"{dir}{sys.argv[1]}"
     loadSys(file)
 
 root.mainloop()
