@@ -79,9 +79,11 @@ def font_popup(event=None):
 # Status bar
 def update_status(event=None):
     current_font = font.Font(font=textEditor.cget("font"))
+    current_font_family = current_font.actual("family")
+    current_font_size = current_font.actual("size")
     line, col = textEditor.index("insert").split(".")
     status.config(
-        text=f"Ln {line}, Col {col} | {current_font.actual("family")} {current_font.actual("size")} "
+        text=f"Ln {line}, Col {col} | {current_font_family} {current_font_size} "
     )
 def poll_cursor():
     update_status()
