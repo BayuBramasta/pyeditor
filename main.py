@@ -240,8 +240,7 @@ def load(event=None):
             pass
 
 def newWindow():
-    os.system('pyeditor.bat')
-
+    os.system("pyeditor.bat")
 
 #initialize window
 root = tk.Tk()
